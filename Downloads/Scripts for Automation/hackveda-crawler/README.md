@@ -1,6 +1,6 @@
-# HackVeda Crawler - Google Crawler + Gmail Email Sender
+# 🚀 HackVeda Crawler - Complete Web Scraping & Email Marketing Tool
 
-A production-ready Python application for digital marketing that crawls Google search results and sends personalized outreach emails via Gmail API.
+A production-ready Python application for digital marketing that crawls Google search results and sends beautiful HTML email reports. Features a modern web dashboard, CLI interface, and professional email templates with sender identification.
 
 ## 🚀 Features
 
@@ -11,10 +11,11 @@ A production-ready Python application for digital marketing that crawls Google s
 - **Data Enrichment**: Extract contact info, domain metadata, and social links
 
 ### Email Marketing
-- **Secure Gmail Integration**: OAuth2 authentication with Gmail API
-- **Personalized Templates**: Jinja2 templating for dynamic email content
-- **Send Tracking**: Monitor email status (queued, sent, failed, bounces)
-- **Rate Limiting**: Respect Gmail sending limits with intelligent backoff
+- **SendGrid Integration**: Professional email delivery with high deliverability
+- **Beautiful HTML Reports**: Responsive email templates with sender identification
+- **Professional Templates**: Jinja2 templating with crawl results formatting
+- **Send Tracking**: Monitor email status with real-time dashboard updates
+- **Sender Information**: Clear sender name and email in all reports
 
 ### Data Management
 - **Persistent Storage**: PostgreSQL/SQLite with SQLAlchemy ORM
@@ -22,27 +23,34 @@ A production-ready Python application for digital marketing that crawls Google s
 - **Export Options**: CSV export and audit trails
 - **GDPR Compliance**: Data protection and opt-out mechanisms
 
+### Web Interface
+- **Modern Dashboard**: Real-time web interface on port 3000
+- **Socket.IO Integration**: Live updates and progress tracking
+- **Session Management**: View and manage all crawl sessions
+- **Email Reports**: Send reports directly from web interface
+- **API Endpoints**: Complete REST API for all operations
+
 ### Operations
 - **Containerized**: Docker and docker-compose ready
-- **Scheduling**: Cron and APScheduler support for recurring tasks
+- **CLI Interface**: Rich command-line tools with colored output
 - **Monitoring**: Comprehensive logging and health checks
 - **Testing**: Unit tests and integration tests included
 
 ## 🛠️ Tech Stack
 
-- **Python 3.10+**
-- **Crawling**: Requests, BeautifulSoup4, Playwright
-- **Database**: SQLAlchemy + PostgreSQL/SQLite
-- **Email**: Google API Client, OAuth2
-- **Templating**: Jinja2
-- **Scheduling**: APScheduler
-- **Testing**: Pytest
+- **Backend**: Python 3.10+, Flask, SQLAlchemy
+- **Frontend**: HTML5, CSS3, JavaScript, Tailwind CSS
+- **Database**: SQLite (development), PostgreSQL (production)
+- **Email**: SendGrid API, Jinja2 templating
+- **Real-time**: Socket.IO, Flask-SocketIO
+- **Crawling**: Requests, BeautifulSoup4, Demo mode
+- **Testing**: Pytest, comprehensive test suite
 - **Deployment**: Docker, Docker Compose
 
 ## 📋 Prerequisites
 
 1. **Python 3.10+** installed
-2. **Google Cloud Console** account for Gmail API
+2. **SendGrid Account** for email delivery (free tier available)
 3. **Docker** (optional, for containerized deployment)
 
 ## 🚀 Quick Start
@@ -50,40 +58,46 @@ A production-ready Python application for digital marketing that crawls Google s
 ### 1. Clone and Setup
 
 ```bash
-git clone <repository-url>
-cd hackveda-crawler
+git clone https://github.com/gkganesh12/GaneshXploit.git
+cd GaneshXploit
 pip install -r requirements.txt
 ```
 
-### 2. Configure Gmail API
+### 2. Configure SendGrid
 
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select existing one
-3. Enable Gmail API
-4. Create OAuth2 credentials (Desktop application)
-5. Download `credentials.json` to `secrets/` directory
-
-### 3. Configuration
+1. Sign up at [SendGrid](https://sendgrid.com/) (free tier available)
+2. Create an API key in SendGrid dashboard
+3. Set environment variables:
 
 ```bash
-cp examples/config.example.yml config.yml
-# Edit config.yml with your settings
+export SENDGRID_API_KEY="your_sendgrid_api_key"
+export FROM_EMAIL="your_verified_email@domain.com"
+export DATABASE_URL="sqlite:///data/hackveda.db"
 ```
 
-### 4. Initial OAuth2 Setup
+### 3. Run Web Interface
 
 ```bash
-python src/cli.py auth setup
-# Follow the browser prompt to authorize the application
+python web_app.py
+# Open http://localhost:3000 in your browser
 ```
 
-### 5. Run Demo
+### 4. Run CLI Demo
 
 ```bash
-# Crawl keywords and send test email
-python src/cli.py crawl --keywords "productivity tools,project management"
-python src/cli.py email send --template welcome --to test@example.com
+# Crawl keywords with demo mode
+python src/cli.py crawl keywords --keywords "productivity tools" --demo --max-results 5
+
+# Check database stats
+python src/cli.py db stats
 ```
+
+### 5. Send Email Reports
+
+Use the web interface to:
+1. Enter keywords and start crawling
+2. View results in the sessions table
+3. Click "Email Report" to send beautiful HTML reports
 
 ## 🐳 Docker Deployment
 
@@ -95,41 +109,81 @@ docker-compose up -d
 docker-compose exec app python src/cli.py crawl --keywords "saas tools"
 ```
 
+## 🌐 Web Interface Features
+
+### Dashboard Overview
+- **Real-time Stats**: Live database statistics and system health
+- **Session Management**: View all crawl sessions with results count
+- **Progress Tracking**: Live crawling progress with Socket.IO
+- **Email Activity**: Real-time email sending notifications
+
+### Crawling Interface
+- **Keyword Input**: Multi-line keyword entry with validation
+- **Demo Mode**: Safe testing with realistic sample data
+- **Progress Bar**: Visual feedback during crawling operations
+- **Results Display**: Immediate session creation and status updates
+
+### Email Reports
+- **Beautiful HTML**: Professional email templates with gradients
+- **Sender Information**: Clear identification of report sender
+- **Result Summary**: Statistics cards with total results and domains
+- **Responsive Design**: Mobile-friendly email layouts
+
 ## 📊 Usage Examples
 
-### Crawling
+### Web Interface
+1. Open http://localhost:3000
+2. Enter keywords (one per line)
+3. Click "Start Crawling"
+4. View results in sessions table
+5. Click "Email Report" to send formatted reports
 
-```python
-from src.app.crawler.google_serp import GoogleSERPCrawler
+### CLI Usage
 
-crawler = GoogleSERPCrawler()
-results = crawler.crawl_keywords(["productivity tools"], max_results=10)
+```bash
+# Demo crawling
+python src/cli.py crawl keywords --keywords "digital marketing tools" --demo
+
+# Database operations
+python src/cli.py db stats
+python src/cli.py db sessions
+
+# Email testing
+python test_sendgrid.py
 ```
 
-### Email Sending
+### API Usage
 
 ```python
-from src.app.email.gmail_api import GmailService
+# Direct API calls
+import requests
 
-gmail = GmailService()
-gmail.send_templated_email(
-    to="lead@company.com",
-    template="outreach",
-    context={"company": "Company Name", "product": "Your Product"}
-)
+# Start crawling
+response = requests.post('http://localhost:3000/api/crawl', json={
+    'keywords': ['productivity tools'],
+    'max_results': 10
+})
+
+# Send email report
+response = requests.post('http://localhost:3000/api/email/report', json={
+    'to_email': 'recipient@example.com',
+    'session_id': 1
+})
 ```
 
 ## 🔒 Security & Compliance
 
-### Gmail API Security
-- **OAuth2 Flow**: Secure token-based authentication
-- **Token Storage**: Encrypted token storage with automatic refresh
-- **No Passwords**: Never store Gmail passwords or app passwords
+### Email Security
+- **SendGrid API**: Secure API key-based authentication
+- **Environment Variables**: API keys stored in environment, not code
+- **Sender Verification**: Professional sender identification in emails
+- **No Password Storage**: API-based authentication only
 
 ### Data Protection
 - **GDPR Compliance**: Data minimization and opt-out mechanisms
 - **Audit Trails**: Complete logging of all data processing
-- **Secure Storage**: Encrypted sensitive data storage
+- **Secure Storage**: SQLite database with proper access controls
+- **API Key Management**: Secure credential handling
 
 ### Crawling Ethics
 - **Robots.txt Compliance**: Automatic robots.txt checking
