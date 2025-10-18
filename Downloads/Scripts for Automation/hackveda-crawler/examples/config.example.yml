@@ -1,0 +1,137 @@
+# HackVeda Crawler Configuration Example
+# Copy this to config.yml and customize for your needs
+
+crawler:
+  mode: light                              # light | browser
+  user_agent: "HackVedaBot/1.0 (+https://hackveda.example)"
+  delay_min: 2                            # Minimum delay between requests (seconds)
+  delay_max: 6                            # Maximum delay between requests (seconds)
+  max_results: 10                         # Maximum results per keyword
+  respect_robots_txt: true                # Always respect robots.txt
+  timeout: 30                             # Request timeout (seconds)
+  max_retries: 3                          # Maximum retry attempts
+  
+  # Browser mode settings (when mode: browser)
+  browser:
+    headless: true                        # Run browser in headless mode
+    viewport_width: 1920
+    viewport_height: 1080
+    
+  # Proxy settings (optional)
+  proxy:
+    enabled: false
+    http: "http://proxy:8080"
+    https: "https://proxy:8080"
+
+database:
+  # PostgreSQL (recommended for production)
+  url: "postgresql://username:password@localhost:5432/hackveda_crawler"
+  
+  # SQLite (for development/testing)
+  # url: "sqlite:///data/crawler.db"
+  
+  pool_size: 10
+  max_overflow: 20
+  echo: false                             # Set to true for SQL debugging
+
+email:
+  provider: gmail_api                     # gmail_api | smtp
+  
+  gmail:
+    credentials_path: "secrets/credentials.json"
+    token_path: "secrets/token.json"
+    from_address: "yourname@yourdomain.com"
+    from_name: "Your Name"
+    daily_limit: 500                      # Gmail daily sending limit
+    rate_limit: 10                        # Emails per minute
+    
+  # SMTP fallback (not recommended for production)
+  smtp:
+    host: "smtp.gmail.com"
+    port: 587
+    use_tls: true
+    username: "your-email@gmail.com"
+    # Use app password for Gmail with 2FA
+    password: "your-app-password"         # Store in environment variable!
+
+templates:
+  directory: "templates/"
+  default_template: "outreach"
+  
+  # Template variables
+  variables:
+    company_name: "HackVeda"
+    sender_name: "Your Name"
+    sender_title: "Marketing Manager"
+    website: "https://hackveda.example"
+
+enrichment:
+  extract_contacts: true                  # Extract email addresses from pages
+  extract_social: true                    # Extract social media links
+  check_domain_authority: false          # Requires external API
+  
+  # Contact extraction settings
+  contact:
+    max_pages_per_domain: 3              # Max pages to check for contacts
+    common_contact_pages:
+      - "/contact"
+      - "/about"
+      - "/team"
+      - "/contact-us"
+
+app:
+  concurrency: 3                          # Number of concurrent crawlers
+  log_level: INFO                         # DEBUG | INFO | WARNING | ERROR
+  data_retention_days: 90                 # Auto-cleanup old data
+  
+  # Rate limiting
+  rate_limit:
+    enabled: true
+    redis_url: "redis://localhost:6379/0"
+    requests_per_minute: 60
+    
+  # Scheduling
+  scheduler:
+    enabled: false                        # Enable background scheduler
+    timezone: "UTC"
+    
+    jobs:
+      - name: "daily_crawl"
+        schedule: "0 9 * * *"             # 9 AM daily
+        keywords: ["saas tools", "productivity apps"]
+        
+      - name: "weekly_cleanup"
+        schedule: "0 2 * * 0"             # 2 AM Sunday
+        action: "cleanup_old_data"
+
+# Security settings
+security:
+  encrypt_tokens: true                    # Encrypt stored OAuth tokens
+  audit_logging: true                     # Log all data access
+  gdpr_compliance: true                   # Enable GDPR features
+  
+  # Data retention
+  retention:
+    crawl_data: 90                        # Days to keep crawl data
+    email_logs: 365                       # Days to keep email logs
+    audit_logs: 1095                      # Days to keep audit logs (3 years)
+
+# Logging configuration
+logging:
+  level: INFO
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+  files:
+    crawler: "logs/crawler.log"
+    email: "logs/email.log"
+    audit: "logs/audit.log"
+    
+  rotation:
+    max_size: "10MB"
+    backup_count: 5
+
+# Development settings
+development:
+  debug: false
+  mock_email_sending: false               # Mock emails for testing
+  sample_data: false                      # Load sample data on startup

@@ -1,0 +1,97 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hackveda-crawler
+    volumes:
+      - ./config.yml:/app/config.yml
+      - ./secrets:/app/secrets
+      - ./logs:/app/logs
+      - ./data:/app/data
+      - ./templates:/app/templates
+    environment:
+      - DATABASE_URL=postgresql://crawler:crawler_pass@postgres:5432/crawler_db
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - crawler-network
+    restart: unless-stopped
+    command: ["python", "src/cli.py", "server", "--host", "0.0.0.0", "--port", "8000"]
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: hackveda-postgres
+    environment:
+      POSTGRES_DB: crawler_db
+      POSTGRES_USER: crawler
+      POSTGRES_PASSWORD: crawler_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - crawler-network
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: hackveda-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - crawler-network
+    restart: unless-stopped
+
+  # Optional: Web dashboard
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dashboard
+    container_name: hackveda-dashboard
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_URL=postgresql://crawler:crawler_pass@postgres:5432/crawler_db
+    depends_on:
+      - postgres
+    networks:
+      - crawler-network
+    restart: unless-stopped
+
+  # Optional: Scheduler service
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hackveda-scheduler
+    volumes:
+      - ./config.yml:/app/config.yml
+      - ./secrets:/app/secrets
+      - ./logs:/app/logs
+    environment:
+      - DATABASE_URL=postgresql://crawler:crawler_pass@postgres:5432/crawler_db
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - crawler-network
+    restart: unless-stopped
+    command: ["python", "src/cli.py", "scheduler", "start"]
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  crawler-network:
+    driver: bridge

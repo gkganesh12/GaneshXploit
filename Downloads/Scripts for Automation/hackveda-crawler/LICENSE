@@ -1,0 +1,45 @@
+MIT License
+
+Copyright (c) 2024 HackVeda Crawler
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+ADDITIONAL TERMS FOR RESPONSIBLE USE:
+
+1. COMPLIANCE: Users must comply with all applicable laws, regulations, and 
+   website terms of service when using this software.
+
+2. ETHICAL USE: This software is intended for legitimate marketing and research 
+   purposes only. Users must not use it for spam, harassment, or any malicious 
+   activities.
+
+3. RATE LIMITING: Users must respect website rate limits and implement 
+   appropriate delays to avoid overwhelming target servers.
+
+4. DATA PROTECTION: Users must comply with GDPR, CCPA, and other applicable 
+   data protection regulations when processing personal data.
+
+5. ROBOTS.TXT: Users should respect robots.txt files and website crawling 
+   policies.
+
+6. OPT-OUT: Users must provide clear opt-out mechanisms for email recipients 
+   and honor unsubscribe requests.
+
+The authors and contributors of this software are not responsible for any 
+misuse or legal consequences resulting from the use of this software.

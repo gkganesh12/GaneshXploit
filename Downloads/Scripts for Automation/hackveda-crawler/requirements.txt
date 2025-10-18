@@ -1,0 +1,64 @@
+# Core dependencies
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+urllib3>=2.0.0
+
+# Database
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.0
+alembic>=1.12.0
+
+# Email & Authentication
+google-auth>=2.23.0
+google-auth-oauthlib>=1.1.0
+google-api-python-client>=2.100.0
+google-auth-httplib2>=0.1.1
+
+# Templating
+jinja2>=3.1.0
+
+# Configuration & CLI
+pyyaml>=6.0
+click>=8.1.0
+python-dotenv>=1.0.0
+
+# Scheduling & Jobs
+apscheduler>=3.10.0
+
+# Browser automation (optional)
+playwright>=1.39.0
+
+# Data processing
+pandas>=2.1.0
+validators>=0.22.0
+
+# Logging & Monitoring
+structlog>=23.1.0
+rich>=13.5.0
+
+# Security & Encryption
+cryptography>=45.0.6
+
+# SendGrid
+sendgrid>=6.12.5
+
+# Web Interface
+flask>=3.1.0
+flask-cors>=6.0.0
+flask-socketio>=5.5.0
+
+# Rate limiting
+redis>=5.0.0
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-mock>=3.11.0
+responses>=0.23.0
+
+# Development
+black>=23.7.0
+flake8>=6.0.0
+mypy>=1.5.0
+pre-commit>=3.4.0

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Status</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+</head>
+<body>
+    <h1>HackVeda Crawler Debug</h1>
+    <div id="status">Checking connection...</div>
+    <div id="logs"></div>
+    
+    <script>
+        const socket = io();
+        const statusDiv = document.getElementById('status');
+        const logsDiv = document.getElementById('logs');
+        
+        function log(message) {
+            console.log(message);
+            logsDiv.innerHTML += '<p>' + new Date().toLocaleTimeString() + ': ' + message + '</p>';
+        }
+        
+        log('🚀 Starting connection test...');
+        
+        socket.on('connect', function() {
+            statusDiv.innerHTML = '✅ CONNECTED';
+            statusDiv.style.color = 'green';
+            log('✅ Socket connected successfully');
+        });
+        
+        socket.on('disconnect', function() {
+            statusDiv.innerHTML = '❌ DISCONNECTED';
+            statusDiv.style.color = 'red';
+            log('❌ Socket disconnected');
+        });
+        
+        socket.on('connect_error', function(error) {
+            statusDiv.innerHTML = '❌ CONNECTION ERROR';
+            statusDiv.style.color = 'red';
+            log('❌ Connection error: ' + error);
+        });
+        
+        // Test API calls
+        setTimeout(() => {
+            log('🔍 Testing API calls...');
+            
+            fetch('/api/health')
+                .then(r => r.json())
+                .then(data => log('✅ Health API: ' + JSON.stringify(data)))
+                .catch(e => log('❌ Health API error: ' + e));
+                
+            fetch('/api/sessions')
+                .then(r => r.json())
+                .then(data => log('✅ Sessions API: ' + data.sessions.length + ' sessions'))
+                .catch(e => log('❌ Sessions API error: ' + e));
+        }, 2000);
+    </script>
+</body>
+</html>

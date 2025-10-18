@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HackVeda Simple Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .healthy { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        #results { margin-top: 20px; padding: 10px; background: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <h1>🚀 HackVeda Crawler - Simple Test</h1>
+    
+    <div id="status" class="status info">Testing...</div>
+    
+    <button onclick="testHealth()">Test Health API</button>
+    <button onclick="testSessions()">Test Sessions API</button>
+    <button onclick="testCrawl()">Test Crawl API</button>
+    
+    <div id="results"></div>
+    
+    <script>
+        const resultsDiv = document.getElementById('results');
+        const statusDiv = document.getElementById('status');
+        
+        function log(message) {
+            console.log(message);
+            resultsDiv.innerHTML += '<p>' + new Date().toLocaleTimeString() + ': ' + message + '</p>';
+        }
+        
+        async function testHealth() {
+            try {
+                log('🔍 Testing Health API...');
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                
+                if (data.status === 'healthy') {
+                    statusDiv.innerHTML = '✅ Backend Healthy - ' + data.components.database_stats.crawl_sessions + ' sessions';
+                    statusDiv.className = 'status healthy';
+                    log('✅ Health API working: ' + JSON.stringify(data.components.database_stats));
+                } else {
+                    statusDiv.innerHTML = '❌ Backend Issues';
+                    statusDiv.className = 'status error';
+                    log('❌ Health API issues: ' + JSON.stringify(data));
+                }
+            } catch (error) {
+                statusDiv.innerHTML = '❌ API Connection Failed';
+                statusDiv.className = 'status error';
+                log('❌ Health API error: ' + error);
+            }
+        }
+        
+        async function testSessions() {
+            try {
+                log('📋 Testing Sessions API...');
+                const response = await fetch('/api/sessions');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    log('✅ Sessions API working: ' + data.sessions.length + ' sessions found');
+                    data.sessions.forEach(s => {
+                        log('  • ' + s.session_name + ' (' + s.status + ') - ' + s.total_results + ' results');
+                    });
+                } else {
+                    log('❌ Sessions API error: ' + JSON.stringify(data));
+                }
+            } catch (error) {
+                log('❌ Sessions API error: ' + error);
+            }
+        }
+        
+        async function testCrawl() {
+            try {
+                log('🕷️ Testing Crawl API...');
+                const response = await fetch('/api/crawl', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        keywords: ['simple test'],
+                        max_results: 3
+                    })
+                });
+                const data = await response.json();
+                
+                if (data.status === 'started') {
+                    log('✅ Crawl API working: Session ' + data.session_name + ' started');
+                } else {
+                    log('❌ Crawl API error: ' + JSON.stringify(data));
+                }
+            } catch (error) {
+                log('❌ Crawl API error: ' + error);
+            }
+        }
+        
+        // Auto-test on load
+        window.onload = function() {
+            log('🚀 Starting automatic tests...');
+            testHealth();
+            setTimeout(testSessions, 1000);
+        };
+    </script>
+</body>
+</html>
