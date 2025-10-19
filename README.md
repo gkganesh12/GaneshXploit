@@ -50,7 +50,7 @@ A production-ready Python application for digital marketing that crawls Google s
 ### 1. Clone and Setup
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/gkganesh12/GaneshXploit.git
 cd hackveda-crawler
 pip install -r requirements.txt
 ```
